@@ -8,8 +8,16 @@ The muxer basically sniffs the initial data packet sent by the client to
 determine (using a rule set) where to forward the request to.
 
 ## Install
+From the NPM repository:
 ```
-npm install port-mux
+$ npm install port-mux
+```
+
+From the Github repository:
+```
+$ git clone https://github.com/robertklep/node-port-mux.git
+$ cd node-port-mux
+$ npm install [-g]
 ```
 
 ## Example
