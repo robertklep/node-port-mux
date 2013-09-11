@@ -67,8 +67,9 @@ Muxer.prototype.listen = function() {
           proxy.pipe(conn);
         }
       });
+      // No matcher found: destroy connection.
       if (! found_match) {
-        // XXX: handle error?
+        return conn.destroy();
       }
     });
   });
