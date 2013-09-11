@@ -73,5 +73,5 @@ Muxer.prototype.listen = function() {
     });
   });
   this.server.listen.apply(this.server, arguments);
-  return this;
+  return this.server;
 };
