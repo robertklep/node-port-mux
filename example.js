@@ -4,7 +4,7 @@ new Muxer()
   // forward HTTP to port 3001
   .add(/^(?:GET|POST|PUT|DELETE)\s/, 3001)
   // forward HTTPS to port 3002
-  .add(/^\x16\x03(?:\x00|\x01|\x02|\x03)/, 3002)
+  .add(/^\x16\x03[\x00-\x03]/, 3002)
   // start listening; .listen() accepts the same arguments as net.Server#listen()
   .listen(3000, function() {
     var addr = this.address();

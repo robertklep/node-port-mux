@@ -37,7 +37,7 @@ new Muxer()
   // match HTTP GET requests and forward them to localhost:80
   .add("GET ", 80)                                            // string
   // match TLS (HTTPS) requests (versions 3.{0,1,2,3})
-  .add(/^\x16\x03(?:\x00|\x01|\x02|\x03)/, '192.168.1.1:443') // regex
+  .add(/^\x16\x03[\x00-\x03]/, '192.168.1.1:443') // regex
   // you can also pass a matcher function:
   .add(function(chunk) {
     // - chunk is a Buffer
