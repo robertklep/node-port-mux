@@ -1,11 +1,13 @@
 var net = require('net');
 
-var Muxer = module.exports = function(options) {
+var Muxer = module.exports = function Muxer(options) {
+  if (this.constructor.name !== 'Muxer')
+    return new Muxer(options);
   this.services = [];
   return this;
 };
 
-Muxer.prototype.add = function(matcher, handler) {
+Muxer.prototype.addRule = Muxer.prototype.add = function(matcher, handler) {
   var type = matcher.constructor.name;
 
   // Process matcher.
