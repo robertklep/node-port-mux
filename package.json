@@ -3,6 +3,19 @@
   "version": "0.0.1",
   "description": "TCP port multiplexer: run multiple services through the same port",
   "main": "src/port-mux.js",
-  "author": "Robert Klep",
-  "license": "BSD-2-Clause"
+  "author": {
+    "name": "Robert Klep",
+    "email": "robert.klep@gmail.com"
+  },
+  "keywords": [
+    "tcp",
+    "port",
+    "mux",
+    "multiplex"
+  ],
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/robertklep/node-port-mux.git"
+  }
 }
