@@ -1,4 +1,4 @@
-var Muxer = require('./src/port-mux.js');
+var Muxer = require('port-mux');
 
 new Muxer()
   // forward HTTP to port 3001
