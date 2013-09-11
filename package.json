@@ -1,6 +1,6 @@
 {
   "name": "port-mux",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Multiplex multiple services through one (TCP) port.",
   "main": "src/port-mux.js",
   "author": {
