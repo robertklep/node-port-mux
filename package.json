@@ -1,7 +1,7 @@
 {
   "name": "port-mux",
   "version": "0.0.1",
-  "description": "TCP port multiplexer: run multiple services through the same port",
+  "description": "Multiplex multiple services through one (TCP) port.",
   "main": "src/port-mux.js",
   "author": {
     "name": "Robert Klep",
