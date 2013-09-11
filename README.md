@@ -7,6 +7,13 @@ Multiplex multiple services through one (TCP) port.
 The muxer basically sniffs the initial data packet sent by the client to
 determine (using a rule set) where to forward the request to.
 
+## Why?
+
+Instead of having to expose all your services to the outside world on their
+respective ports, use a single port to access them all. Initially created
+to multiplex HTTP, HTTPS and SOCKS5 traffic over one port for a personal
+project.
+
 ## Install
 From the NPM repository:
 ```
