@@ -17,5 +17,9 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/robertklep/node-port-mux.git"
+  },
+  "homepage": "https://github.com/robertklep/node-port-mux",
+  "bugs": {
+    "url": "https://github.com/robertklep/node-port-mux/issues"
   }
 }
