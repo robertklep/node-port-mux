@@ -15,7 +15,7 @@ npm install port-mux
 ## Example
 
 ```javascript
-var Muxer = require('node-mux');
+var Muxer = require('port-mux');
 
 // instantiate Muxer
 new Muxer()
@@ -31,6 +31,7 @@ new Muxer()
   // start listening on port 3000
   .listen(3000);
 ```
+
 ## LICENSE
 
 Simplified BSD License ( *BSD-2-Clause* ).
