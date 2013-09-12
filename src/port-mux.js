@@ -1,4 +1,5 @@
 var net = require('net');
+var fs  = require('fs');
 
 var Muxer = module.exports = function Muxer(options) {
   if (this.constructor.name !== 'Muxer')
@@ -25,26 +26,35 @@ Muxer.prototype.addRule = Muxer.prototype.add = function(matcher, handler) {
     throw new Error('Unknown handler type (can handle functions, regex and strings)');
   }
 
-  // Process handler ('[ADDRESS:]PORT' only for now).
-  var address = '127.0.0.1';
-  var port    = null;
-  var s       = String(handler).split(':');
-  if (s.length === 1) {
-    port = s[0];
-  } else if (s.length === 2) {
-    address = s[0] || address;
-    port    = s[1];
+  // Process handler (either a path or '[ADDRESS:]PORT').
+  if (fs.existsSync(handler)) {
+    // make sure it's a socket
+    var stat = fs.statSync(handler);
+    if (! stat.isSocket())
+      throw new Error('Handler is a file, but not a socket');
+    handler = { file : handler };
+  } else {
+    var address = '127.0.0.1';
+    var port    = null;
+    var s       = String(handler).split(':');
+    if (s.length === 1) {
+      port = s[0];
+    } else if (s.length === 2) {
+      address = s[0] || address;
+      port    = s[1];
+    }
+    if (port === null)
+      throw new Error('Invalid handler address (should be "[ADDRESS:]PORT")');
+    handler = {
+      address : address,
+      port    : port
+    };
   }
-  if (port === null)
-    throw new Error('Invalid handler address (should be "[ADDRESS:]PORT")');
 
   // Add to list of services.
   this.services.push({
     matcher : matcher,
-    handler : {
-      address : address,
-      port    : port
-    }
+    handler : handler
   });
 
   // Done.
@@ -72,7 +82,11 @@ Muxer.prototype.listen = function() {
         var service = services[i];
         if (service.matcher(chunk) === true) {
           // Found one: create a connection to it.
-          proxy = net.connect(service.handler.port, service.handler.address);
+          if (service.handler.file) {
+            proxy = net.connect(service.handler.file);
+          } else {
+            proxy = net.connect(service.handler.port, service.handler.address);
+          }
 
           // Handle errors on proxy stream.
           proxy.on('error', function(e) {
