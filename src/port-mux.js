@@ -53,28 +53,54 @@ Muxer.prototype.addRule = Muxer.prototype.add = function(matcher, handler) {
 
 Muxer.prototype.listen = function() {
   var services  = this.services;
-  this.server   = net.createServer(function(conn) {
-    var first = true;
-    conn.on('data', function(chunk) {
-      if (! first)
-        return;
-      first = false;
-      var found_match = false;
-      services.forEach(function(service) {
-        if (! found_match && service.matcher(chunk) === true) {
-          found_match = true;
-          var proxy = net.connect(service.handler.port, service.handler.address);
+  var server = this.server = net.createServer(function(conn) {
+    var proxy = null;
+
+    // Handle errors on connection.
+    conn.on('error', function(e) {
+      conn.destroy();
+      if (proxy)
+        proxy.destroy();
+      // XXX: propagate to server? not for now.
+      // server.emit('error', e);
+    });
+
+    // Wait for the first data event.
+    conn.once('data', function(chunk) {
+      // Find a matching service for this chunk.
+      for (var i = 0, len = services.length; i < len; i++) {
+        var service = services[i];
+        if (service.matcher(chunk) === true) {
+          // Found one: create a connection to it.
+          proxy = net.connect(service.handler.port, service.handler.address);
+
+          // Handle errors on proxy stream.
+          proxy.on('error', function(e) {
+            proxy.destroy();
+            conn.destroy();
+            // XXX: propagate to server? not for now.
+            // server.emit('error', e);
+          });
+
+          // Write the first chunk of data (XXX: wait for 'writable'?)
           proxy.write(chunk);
+
+          // Pipe connection to proxy and vice versa.
           conn.pipe(proxy);
           proxy.pipe(conn);
+
+          // Done.
+          return;
         }
-      });
-      // No matcher found: destroy connection.
-      if (! found_match) {
-        return conn.destroy();
       }
+      // No matcher found: destroy connection.
+      return conn.destroy();
     });
   });
+
+  // Start listening.
   this.server.listen.apply(this.server, arguments);
+
+  // Done.
   return this.server;
 };
