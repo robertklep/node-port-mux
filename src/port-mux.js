@@ -89,9 +89,11 @@ Muxer.prototype.listen = function() {
             proxy = net.connect(service.handler.port, service.handler.address);
           }
 
-          // If rule has a callback, call it.
+          // If rule has a callback, call it on the 'connect' event.
           if (typeof service.callback === 'function') {
-            service.callback(proxy, conn, service);
+            proxy.on('connect', function() {
+              service.callback(proxy, conn, service);
+            });
           }
 
           // Handle errors on proxy stream.

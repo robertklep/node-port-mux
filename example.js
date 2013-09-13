@@ -18,7 +18,14 @@ require('https').createServer(options, function(req, res) {
 // configure and start muxer
 Muxer()
   // forward HTTP to port 3001
-  .addRule(/^(?:GET|POST|PUT|DELETE)\s/, 3001)
+  .addRule(/^(?:GET|POST|PUT|DELETE)\s/, 3001, function(proxy, conn) {
+    var addr = proxy.address();
+    console.log('Incoming connection from %s passed to %s:%s',
+      conn.remoteAddress,
+      addr.address,
+      addr.port
+    );
+  })
   // forward HTTPS to port 3002
   .addRule(/^\x16\x03[\x00-\x03]/, 3002)
   // start listening; .listen() accepts the same arguments as net.Server#listen()

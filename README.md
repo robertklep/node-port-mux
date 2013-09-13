@@ -49,9 +49,16 @@ Muxer()
     // - if the function returns true, the match is considered a success.
   }, ...)
 
-  // pass a function as a third argument and it will get called using the
-  // proxy and original (incoming) connections as arguments:
+  // pass a function as a third argument and it will get called (once the proxy
+  // has connected to the service) using the proxy connection and original
+  // (incoming) connection as arguments:
   .addRule(..., ..., function(proxy, conn) {
+    var addr = proxy.address();
+    console.log('Incoming connection from %s passed to %s:%s',
+      conn.remoteAddress,
+      addr.address,
+      addr.port
+    );
   })
 
   // start listening on port 3000
