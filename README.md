@@ -40,7 +40,7 @@ Muxer()
   // match TLS (HTTPS) requests (versions 3.{0,1,2,3}) using a regular expression
   .addRule(/^\x16\x03[\x00-\x03]/, '192.168.1.1:443') // regex match
 
-  // you can also proxy UNIX domain sockets (which should already exist when you call .addRule()):
+  // you can also forward to UNIX domain sockets (which should already exist when you call .addRule()):
   .addRule(..., '/tmp/my-unix-domain-socket')
 
   // you can also pass a matcher function:
