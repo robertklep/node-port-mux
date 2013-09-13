@@ -89,12 +89,20 @@ Muxer.prototype.listen = function() {
             proxy = net.connect(service.handler.port, service.handler.address);
           }
 
-          // If rule has a callback, call it on the 'connect' event.
-          if (typeof service.callback === 'function') {
-            proxy.on('connect', function() {
+          // Wait for 'connect' event before we continue.
+          proxy.once('connect', function() {
+            // If rule has a callback, call it.
+            if (typeof service.callback === 'function') {
               service.callback(proxy, conn, service);
-            });
-          }
+            }
+
+            // Write the first chunk of data.
+            proxy.write(chunk);
+
+            // Pipe connection to proxy and vice versa.
+            conn.pipe(proxy);
+            proxy.pipe(conn);
+          });
 
           // Handle errors on proxy stream.
           proxy.on('error', function(e) {
@@ -103,13 +111,6 @@ Muxer.prototype.listen = function() {
             // XXX: propagate to server? not for now.
             // server.emit('error', e);
           });
-
-          // Write the first chunk of data (XXX: wait for 'writable'?)
-          proxy.write(chunk);
-
-          // Pipe connection to proxy and vice versa.
-          conn.pipe(proxy);
-          proxy.pipe(conn);
 
           // Done.
           return;
