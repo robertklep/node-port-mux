@@ -8,7 +8,7 @@ var Muxer = module.exports = function Muxer(options) {
   return this;
 };
 
-Muxer.prototype.addRule = Muxer.prototype.add = function(matcher, handler) {
+Muxer.prototype.addRule = Muxer.prototype.add = function(matcher, handler, callback) {
   var type = matcher.constructor.name;
 
   // Process matcher.
@@ -53,8 +53,9 @@ Muxer.prototype.addRule = Muxer.prototype.add = function(matcher, handler) {
 
   // Add to list of services.
   this.services.push({
-    matcher : matcher,
-    handler : handler
+    matcher   : matcher,
+    handler   : handler,
+    callback  : callback
   });
 
   // Done.
@@ -86,6 +87,11 @@ Muxer.prototype.listen = function() {
             proxy = net.connect(service.handler.file);
           } else {
             proxy = net.connect(service.handler.port, service.handler.address);
+          }
+
+          // If rule has a callback, call it.
+          if (typeof service.callback === 'function') {
+            service.callback(proxy, conn, service);
           }
 
           // Handle errors on proxy stream.
