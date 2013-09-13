@@ -49,6 +49,11 @@ Muxer()
     // - if the function returns true, the match is considered a success.
   }, ...)
 
+  // pass a function as a third argument and it will get called using the
+  // proxy and original (incoming) connections as arguments:
+  .addRule(..., ..., function(proxy, conn) {
+  })
+
   // start listening on port 3000
   .listen(3000);
 ```
