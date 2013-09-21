@@ -45,7 +45,7 @@ Muxer()
 
   // you can also provide a function to perform the matching:
   .addRule(function(chunk) {
-    // - chunk is a Buffer
+    // - chunk is a Buffer containing the first incoming data
     // - if the function returns true, the match is considered a success.
   }, ...)
 
